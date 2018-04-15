@@ -56,7 +56,7 @@ controller.on('direct_message,direct_mention,mention', async function(bot, messa
     const convo = await controller.studio.runTrigger(bot, message.text, message.user, message.channel, message);
 
     if (!convo) {
-     // controller.studio.run(bot, 'fallback', message.user, message.channel);
+      // controller.studio.run(bot, 'fallback', message.user, message.channel);
     } else {
       // set variables here that are needed for EVERY script
       // use controller.studio.before('script') to set variables specific to a script
@@ -64,6 +64,6 @@ controller.on('direct_message,direct_mention,mention', async function(bot, messa
     }
   } catch (error) {
     // bot.reply(message, 'I experienced an error with a request to Botkit Studio: ' + err);
-    debug('Botkit Studio: ', err);
+    debug('Botkit Studio: ', error);
   }
 });
