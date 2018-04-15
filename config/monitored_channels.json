@@ -1,0 +1,20 @@
+{
+  "random": [
+    {
+      "event": "user_channel_join",
+      "admins_only": true,
+      "users_only": false,
+      "as_dm": false,
+      "as_thread": false,
+      "text": "🚨 ALERTA 🚨: Nuestro administrador {{user}} se ha unido al canal 🤫"
+    },
+    {
+      "event": "ambient",
+      "admins_only": false,
+      "users_only": true,
+      "as_dm": false,
+      "as_thread": true,
+      "text": "Gracias por tu mensaje {{user}}, Te recuerdo que el uso del canal {{channel}} esta restrindo a mensajes importantes"
+    }
+  ]
+}

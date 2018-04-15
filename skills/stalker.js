@@ -99,12 +99,12 @@ module.exports = async controller => {
         ? `https://${process.env.slackTeam}.slack.com/archives/${room_id}/p${id.replace('.', '')}`
         : '';
       const json = JSON.stringify(message.event);
-  
+
       // Format query by escaping fields and values.
       let sql = 'INSERT INTO log SET ?? = ?, ?? = ?, ?? = ?, ?? = ?, ?? = ?, ?? = ?, ?? = ?, ?? = ?';
       const inserts = [ 'id', id, 'room_id', room_id, 'room_name', room_name, 'text', text, 'user_id', user_id, 'user_name', user_name, 'url', url, 'json', json ];
       sql = mysql.format(sql, inserts);
-  
+
       // Insert into MySQL.
       connection.query(sql);
     } else {
@@ -112,3 +112,6 @@ module.exports = async controller => {
     }
   });
 };
+
+module.exports._get_channel_info = get_channel_info;
+module.exports._get_user_info = get_user_info;
