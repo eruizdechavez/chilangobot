@@ -1,7 +1,23 @@
-
 const mysql = require('mysql');
 
+/**
+ * @typedef Channel
+ * @property {string} name
+ * @property {boolean} is_channel
+ * @property {boolean} is_private
+ */
+
+/**
+ * @type {Object.<string, Channel>}
+ */
 const known_channels = {};
+
+/**
+ * Load channel information from Slack API and store it in memory for the next time it is requested.
+ * @param {object} bot A Botkit instance
+ * @param {string} channel The channel id
+ * @returns {Promise<Channel>} A promise to the channel
+ */
 function get_channel_info(bot, channel) {
   return new Promise((resolve, reject) => {
     if (known_channels[channel]) {
@@ -19,7 +35,25 @@ function get_channel_info(bot, channel) {
   });
 }
 
+/**
+ * @typedef User
+ * @property {string} id
+ * @property {string} name
+ * @property {boolean} is_admin
+ * @property {boolean} is_owner
+ */
+
+/**
+ * @type {Object.<string, User>}
+ */
 const known_users = {};
+
+/**
+ * Load channel information from Slack API and store it in memory for the next time it is requested.
+ * @param {Object} bot  A Botkit instance
+ * @param {String} user The user id
+ * @returns {Promise<User>} A promise to the user
+ */
 function get_user_info(bot, user) {
   return new Promise((resolve, reject) => {
     if (known_users[user]) {
@@ -37,7 +71,15 @@ function get_user_info(bot, user) {
   });
 }
 
+/**
+ * A connection instance to MySQL
+ */
 let connection;
+
+/**
+ * Connects to MySQL to log messages in public channels.
+ * @returns {Promise} A promise to the connection
+ */
 function connect_to_db() {
   return new Promise(resolve => {
     connection = mysql.createConnection({
@@ -68,6 +110,10 @@ function connect_to_db() {
   });
 }
 
+/**
+ * Stalker Skill
+ * @module skills/stalker
+ */
 module.exports = async controller => {
   try {
     await connect_to_db();
@@ -113,5 +159,12 @@ module.exports = async controller => {
   });
 };
 
+/**
+ * @alias get_channel_info
+ */
 module.exports._get_channel_info = get_channel_info;
+
+/**
+ * @alias get_user_info
+ */
 module.exports._get_user_info = get_user_info;

@@ -1,19 +1,50 @@
 const debug = require('debug')('chilangobot:custom_channel_join');
-const { _get_channel_info, _get_user_info } = require('./stalker');
+const {_get_channel_info, _get_user_info} = require('./stalker');
 const fs = require('fs');
 
+/**
+ * @typedef MonitoredChannel
+ * @property {string} event Botkit event to be monitored. Currently supported events: user_channel_join, ambient.
+ * @property {boolean} admins_only The event will only be processed if the user who triggered is an admin or an owner.
+ * @property {boolean} users_only The event will only be processed if the user who triggered is not an admin nor an owner.
+ * @property {boolean} as_dm Send the message as direct message to the user who triggered the event.
+ * @property {boolean} as_thread Send the message as a thread response to the user who triggered the event. Bot *MUST* be on the channel for this to work.
+ * @property {string} text The text to be sent in the message. 2 tokens can be replaced dynamically: {{user}} and {{channel}}
+ */
+
+/**
+ * Cached monitored event configuration.
+ *
+ * An Object with keys, each key represents a channel. The content of each key is expected to be an array of objects
+ * with channel events to be monitored.
+ * @type {Object.<string, [MonitoredChannel]}
+ */
 let monitored_channels;
 
+/**
+ * Load the monitored channel configuration from file.
+ * @returns {Object.<string, [MonitoredChannel]} the monitored channels
+ */
 function load_monitored_channels() {
   const config = fs.readFileSync(`${__dirname}/../config/monitored_channels.json`);
   monitored_channels = JSON.parse(config);
+  return monitored_channels;
 }
 
+/**
+ * Channel Monitor
+ * @module skills/monitored_channels
+ */
 module.exports = function(controller) {
-  // Self explanatory... load the monitored channel configuration on load.
+  // Load configuration on load
   load_monitored_channels();
 
-  // If something changes on the messages, allow the bot to reload them on demand instead of having to reload everyhing.
+  /**
+   * Reload channel configuration on demand.
+   *
+   * This allows to modify only the channel events file whithout having to reload the complete application by sending a
+   * direct message to the bot with the text `recarga mensajes`.
+   */
   controller.hears('recarga mensajes', 'direct_message', async (bot, message) => {
     const user = await _get_user_info(bot, message.user);
 
@@ -29,7 +60,9 @@ module.exports = function(controller) {
     await bot.api.reactions.add({name: 'thumbsup', timestamp: message.ts, channel: message.channel});
   });
 
-
+  /**
+   * Listen to all messages and react to them base on the configuration loaded load_monitored_channels.
+   */
   controller.on('user_channel_join,ambient', async (bot, message) => {
     try {
       // Get user and channel info. We'll need some details later.
@@ -47,7 +80,6 @@ module.exports = function(controller) {
 
         // Process each monitored event for the current channel
         monitored_channel.map(async channel_event => {
-
           if (message.type === channel_event.event) {
             // Do not process admin events if the event is for users only
             if ((user.is_admin || user.is_owner) && channel_event.users_only) {
