@@ -1,20 +1,12 @@
 {
-  "random": [
+  "compra-venta": [
     {
       "event": "user_channel_join",
-      "admins_only": true,
-      "users_only": false,
-      "as_dm": false,
-      "as_thread": false,
-      "text": "🚨 ALERTA 🚨: Nuestro administrador {{user}} se ha unido al canal 🤫"
-    },
-    {
-      "event": "ambient",
       "admins_only": false,
-      "users_only": true,
-      "as_dm": false,
-      "as_thread": true,
-      "text": "Gracias por tu mensaje {{user}}, Te recuerdo que el uso del canal {{channel}} esta restrindo a mensajes importantes"
+      "users_only": false,
+      "as_dm": true,
+      "as_thread": false,
+      "text": "Bienvenidx a {{channel}}.\n\nPor favor, sigue la siguientes reglas:\n\n1. Lo que se comparte es responsabilidad de quien lo comparte y quien lo compra.\n2. Todo lo que se comparta debe seguir nuestro codigo de conducta.\n\nPara mas informacion puedes seguir estos links: https://github.com/codersmexico/docs/tree/master/codigo-de-conducta, https://github.com/codersmexico/docs/tree/master/compra-venta"
     }
   ]
 }
