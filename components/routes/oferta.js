@@ -8,13 +8,13 @@ module.exports = (webserver, controller) => {
 
     controller.storage.teams.get(process.env.slackTeamId, (error, team) => {
       const bot = controller.spawn(team.bot);
-      bot.api.channels.list({exclude_archived: true, exclude_members: true}, (error, response) => {
+      bot.api.channels.list({ exclude_archived: true, exclude_members: true }, (error, response) => {
         const channels = response.channels.reduce((channels, channel) => {
           channels[channel.name] = channel.id;
           return channels;
         }, {});
 
-        controller.trigger('oferta_publicada', [bot, channels['random'], req.body]);
+        controller.trigger('oferta_publicada', [bot, channels['ofertas-de-empleo'], req.body]);
       });
     });
   });

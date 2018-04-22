@@ -1,5 +1,5 @@
 const debug = require('debug')('chilangobot:custom_channel_join');
-const {_get_channel_info, _get_user_info} = require('./stalker');
+const { _get_channel_info, _get_user_info } = require('./stalker');
 const fs = require('fs');
 
 /**
@@ -53,11 +53,11 @@ module.exports = function(controller) {
     }
 
     // Instead of spamming the user with status, just add reactions to the command
-    await bot.api.reactions.add({name: 'thinking_face', timestamp: message.ts, channel: message.channel});
+    await bot.api.reactions.add({ name: 'thinking_face', timestamp: message.ts, channel: message.channel });
 
     load_monitored_channels();
-    await bot.api.reactions.remove({name: 'thinking_face', timestamp: message.ts, channel: message.channel});
-    await bot.api.reactions.add({name: 'thumbsup', timestamp: message.ts, channel: message.channel});
+    await bot.api.reactions.remove({ name: 'thinking_face', timestamp: message.ts, channel: message.channel });
+    await bot.api.reactions.add({ name: 'thumbsup', timestamp: message.ts, channel: message.channel });
   });
 
   /**
@@ -92,13 +92,14 @@ module.exports = function(controller) {
             }
 
             // Replace any know token with its real value
-            const text = channel_event.text.replace(/{{user}}/ig, `@${user.name}`).replace(/{{channel}}/ig, `#${channel.name}`);
+            const text = channel_event.text
+              .replace(/{{user}}/gi, `@${user.name}`)
+              .replace(/{{channel}}/gi, `#${channel.name}`);
             let target;
 
             // Set the message target and, if the event should be responded as a direct message open a new conversation
             if (channel_event.as_dm) {
-              target = message.user,
-              await bot.api.im.open({user: target});
+              target = message.user;
             } else {
               target = message.channel;
             }
@@ -109,8 +110,7 @@ module.exports = function(controller) {
               thread_ts = message.ts;
             }
 
-            // All done! Send the message!
-            bot.api.chat.postMessage({
+            bot.say({
               text,
               thread_ts,
               as_user: true,
