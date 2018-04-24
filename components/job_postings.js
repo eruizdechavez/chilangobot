@@ -1,5 +1,9 @@
 module.exports = function(controller) {
   controller.on('interactive_message_callback', function(bot, message) {
+    if (message.callback_id !== 'nueva_oferta') {
+      return;
+    }
+
     console.log(message);
     var dialog = bot
       .createDialog('Nueva Oferta de Trabajo', 'publica_nueva_oferta', 'Publicar')

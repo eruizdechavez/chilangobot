@@ -22,7 +22,7 @@
       "event": "ambient",
       "admins_only": false,
       "users_only": false,
-      "respond_as": "thread",
+      "respond_as": "whisper",
       "text":
         ":rotating_light: El canal {{channel}} es un canal moderado :rotating_light:\n\nSi deseas publicar una oferta puedes usar el boton publicar\nSi deseas mas informacion sobre una oferta puedes usar los links publicados en la misma.",
       "delete_trigger": true,
