@@ -1,11 +1,20 @@
-var debug = require('debug')('botkit:incoming_webhooks');
+const { isString } = require('lodash');
 
 module.exports = function(webserver, controller) {
-  debug('Configured /slack/receive url');
   webserver.post('/slack/receive', function(req, res) {
     // NOTE: we should enforce the token check here
 
-    if (req.body.token !== process.env.slackToken) {
+    let body = req.body;
+
+    if (body.payload && isString(body.payload)) {
+      try {
+        body = JSON.parse(body.payload);
+      } catch (e) {
+        console.log(`Unable to parse as JSON: ${body.payload}`);
+      }
+    }
+
+    if (body.token !== process.env.slackToken) {
       return res.status(403).send();
     }
 
