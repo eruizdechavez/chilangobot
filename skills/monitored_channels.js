@@ -93,8 +93,8 @@ module.exports = function(controller) {
 
             // Replace any know token with its real value
             const text = channel_event.text
-              .replace(/{{user}}/gi, `@${user.name}`)
-              .replace(/{{channel}}/gi, `#${channel.name}`);
+              .replace(/{{user}}/gi, `<@${message.user}>`)
+              .replace(/{{channel}}/gi, `<#${message.channel}>`);
             let target;
 
             // Set the message target and, if the event should be responded as a direct message open a new conversation
@@ -110,12 +110,19 @@ module.exports = function(controller) {
               thread_ts = message.ts;
             }
 
-            bot.say({
+            const data = {
               text,
               thread_ts,
               as_user: true,
               channel: target,
-              link_names: true,
+            };
+
+            if (channel_event.as_whisper) {
+              bot.whisper(message, data);
+            } else {
+              bot.say(data);
+            }
+          }
             });
           }
         });
