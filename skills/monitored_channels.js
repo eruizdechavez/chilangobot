@@ -123,12 +123,69 @@ module.exports = function(controller) {
               bot.say(data);
             }
           }
-            });
-          }
         });
       }
     } catch (error) {
       debug('Error', error);
     }
+  });
+
+  controller.on('ambient', async (bot, message) => {
+    try {
+      const channel = await _get_channel_info(bot, message.channel);
+      const user = await _get_user_info(bot, message.user);
+
+      if (message.thread_ts) {
+        return;
+      }
+
+      if (channel.name === 'ofertas-de-empleo' && message.type === 'ambient') {
+        // if (!user.is_admin && !user.is_owner) {
+        bot.api.chat.delete({
+          channel: message.channel,
+          ts: message.ts,
+          token: process.env.slackAdminToken,
+        });
+        // }
+
+        bot.whisper(message, {
+          channel: message.user,
+          text: `:rotating_light: El canal <#${
+            message.channel
+          }> es un canal moderado :rotating_light:\n\nSi deseas publicar una oferta puedes usar el boton publicar\nSi deseas mas informacion sobre una oferta puedes usar los links publicados en la misma.`,
+          attachments: [
+            {
+              fallback: 'La aplicacion de Slack es necesaria para realizar esta accion.',
+              callback_id: 'nueva_oferta',
+              attachment_type: 'default',
+              actions: [
+                {
+                  name: 'inicia_nueva_oferta',
+                  text: 'Publicar nueva oferta',
+                  type: 'button',
+                  value: 'publicar',
+                },
+              ],
+            },
+          ],
+        });
+      }
+    } catch (error) {
+      debug('Error', error);
+    }
+  });
+
+  controller.on('interactive_message_callback', function(bot, message) {
+    console.log(message);
+    var dialog = bot
+      .createDialog('Nueva Oferta de Trabajo', 'publica_nueva_oferta', 'Publicar')
+      .addText('Titulo', 'title', null, { placeholder: 'Un titulo relevante para la oferta de trabajo' })
+      .addText('Lugar de trabajo', 'place', null, { placeholder: 'En oficina? Remoto? En que cidad, estado, pais?' })
+      .addText('Rango de salario', 'salary', null, { placeholder: 'Para darle una mejor idea a los candidatos' })
+      .addTextarea('Descripcion', 'content', null, {
+        placeholder: 'Descripcion completa del trabajo, hasta 3000 caracteres',
+      });
+
+    bot.replyWithDialog(message, dialog.asObject());
   });
 };
