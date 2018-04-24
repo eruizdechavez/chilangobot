@@ -4,9 +4,7 @@
       "event": "user_channel_join",
       "admins_only": false,
       "users_only": false,
-      "as_dm": false,
-      "as_thread": false,
-      "as_whisper": true,
+      "respond_as": "whisper",
       "text":
         "Bienvenidx a {{channel}}, {{user}}.\n\nPor favor, sigue la siguientes reglas:\n\n1. Lo que se comparte es responsabilidad de quien lo comparte y quien lo compra.\n2. Todo lo que se comparta debe seguir nuestro codigo de conducta.\n\nPara mas informacion puedes seguir estos links: https://github.com/codersmexico/docs/tree/master/codigo-de-conducta, https://github.com/codersmexico/docs/tree/master/compra-venta"
     }
@@ -16,11 +14,33 @@
       "event": "user_channel_join",
       "admins_only": false,
       "users_only": false,
-      "as_dm": false,
-      "as_thread": false,
-      "as_whisper": true,
+      "respond_as": "whisper",
       "text":
         "Bienvenidx a {{channel}}, {{user}}.\n\nPara facilitar la publicacion consistente de ofertas de empleo y mejorar la visibilidad de las mismas este canal esta moderado de forma automatica."
+    },
+    {
+      "event": "ambient",
+      "admins_only": false,
+      "users_only": false,
+      "respond_as": "thread",
+      "text":
+        ":rotating_light: El canal {{channel}} es un canal moderado :rotating_light:\n\nSi deseas publicar una oferta puedes usar el boton publicar\nSi deseas mas informacion sobre una oferta puedes usar los links publicados en la misma.",
+      "delete_trigger": true,
+      "attachments": [
+        {
+          "fallback": "La aplicacion de Slack es necesaria para realizar esta accion.",
+          "callback_id": "nueva_oferta",
+          "attachment_type": "default",
+          "actions": [
+            {
+              "name": "inicia_nueva_oferta",
+              "text": "Publicar nueva oferta",
+              "type": "button",
+              "value": "publicar"
+            }
+          ]
+        }
+      ]
     }
   ]
 }

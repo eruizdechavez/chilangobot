@@ -3,6 +3,8 @@
  * @module skills/oferta
  */
 module.exports = async controller => {
+  require(`${__dirname}/../components/job_postings.js`)(controller);
+
   controller.on('oferta_publicada', (bot, channel, payload) => {
     const attachment = {
       // fallback: 'Required plain-text summary of the attachment.',
